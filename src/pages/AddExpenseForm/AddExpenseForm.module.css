@@ -1,0 +1,14 @@
+.input-container {
+  display: flex;
+  flex-direction: column;
+}
+.wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+.label {
+  font-size: 12px;
+}
+.input {
+  height: 100px;
+}

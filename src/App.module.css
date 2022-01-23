@@ -1,0 +1,14 @@
+body {
+  background-color: rgb(35, 35, 36);
+  color: white;
+}
+.app {
+  max-width: 720px;
+  margin: auto;
+  background-color: #2d2d2d;
+  border-radius: 10px;
+}
+.header {
+  height: 100px;
+  background-color: rgb(48, 54, 58);
+}
