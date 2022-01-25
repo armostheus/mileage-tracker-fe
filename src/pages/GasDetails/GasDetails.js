@@ -11,28 +11,58 @@ const GasDetails = (props) => {
       </div>
       <div className={Styles['list-container']}>
         <div className={Styles['list']}>
-          <p className={Styles['text-lead']}>
-            {props.data.avgFuelConsumption} 
-            <span className={Styles['text-desc']}> mi/l </span>
-          </p>
-          <p className={`${Styles['text-desc']} ${Styles['desc']}`}>Average fuel comsumption</p>
+          {
+            !props.data ? (
+              <p className={Styles['text-lead']}>
+                No Data found
+              </p>
+            ) : (
+              <>
+                <p className={Styles['text-lead']}>
+                  {+props.data.avgFuelConsumption.toFixed(2)} 
+                  <span className={Styles['text-desc']}> mi/l </span>
+                </p>
+                <p className={`${Styles['text-desc']} ${Styles['desc']}`}>Average fuel comsumption</p>              
+              </>
+            )
+          }
         </div>
         <div className={Styles['list']}>
-          <p className={Styles['text-lead']}>
-            {props.data.lastFuelConsumption}
-            <span className={Styles['text-desc']}> mi/l </span>
-          </p>
-          <p className={`${Styles['text-desc']} ${Styles['desc']}`}>Last fuel comsumption</p>
+          {
+            !props.data ? (
+              <p className={Styles['text-lead']}>
+                No Data found
+              </p>
+            ) : (
+              <>
+                <p className={Styles['text-lead']}>
+                  {+props.data.lastFuelConsumption.toFixed(2)}
+                  <span className={Styles['text-desc']}> mi/l </span>
+                </p>
+                <p className={`${Styles['text-desc']} ${Styles['desc']}`}>Last fuel comsumption</p>            
+              </>
+            )
+          }
         </div>
         <div className={Styles['list']}>
-          <p className={Styles['text-lead']}>
-            ${props.data.lastFuelPrice}
-          </p>
-          <p className={`${Styles['text-desc']} ${Styles['desc']}`}>Last fuel price</p>
+          {
+            !props.data ? (
+              <p className={Styles['text-lead']}>
+                No Data found
+              </p>
+            ) : (
+              <>
+                <p className={Styles['text-lead']}>
+                  ${props.data.lastFuelPrice}
+                </p>
+                <p className={`${Styles['text-desc']} ${Styles['desc']}`}>Last fuel price</p>          
+              </>
+            )
+          }
         </div>
         <div className={Styles['list-bottom']}>
           <p className={Styles['sub-text']}>
-            {props.data.lastEntryDate.toLocaleString()} . 7 days ago
+            {!props.data ? '' : `${props.data.lastEntryDate.toLocaleString()} . 7 days ago`}
           </p>
         </div>
       </div>

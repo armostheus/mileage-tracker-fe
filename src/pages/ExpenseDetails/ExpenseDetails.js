@@ -16,7 +16,7 @@ const ExpenseDetails = (props) => {
               <p className={`${StylesA['text-desc']} ${StylesA['desc']} ${StylesA['top-text']}`}>This Month</p>
               <div className={StylesA['list']}>
                 <p className={StylesA['text-lead']}>
-                  ${props.data.thisMonth.gas} 
+                  ${!props.data ? 0 : props.data.thisMonth.gas} 
                 </p>
                 <p className={`${StylesA['text-desc']} ${StylesA['desc']}`}>
                   Gas
@@ -24,7 +24,7 @@ const ExpenseDetails = (props) => {
               </div>
               <div className={StylesA['list']}>
                 <p className={StylesA['text-lead']}>
-                  ${props.data.thisMonth.other} 
+                  ${!props.data ? 0 : props.data.thisMonth.other} 
                 </p>
                 <p className={`${StylesA['text-desc']} ${StylesA['desc']}`}>
                   Other costs
@@ -35,7 +35,7 @@ const ExpenseDetails = (props) => {
               <p className={`${StylesA['text-desc']} ${StylesA['desc']} ${StylesA['top-text']}`}>Previous Month</p>
               <div className={StylesA['list']}>
                 <p className={StylesA['text-lead']}>
-                  ${props.data.previousMonth.gas} 
+                  ${!props.data ? 0 : props.data.previousMonth.gas} 
                 </p>
                 <p className={`${StylesA['text-desc']} ${StylesA['desc']}`}>
                   Gas
@@ -43,7 +43,7 @@ const ExpenseDetails = (props) => {
               </div>
               <div className={StylesA['list']}>
                 <p className={StylesA['text-lead']}>
-                  ${props.data.previousMonth.other} 
+                  ${!props.data ? 0 : props.data.previousMonth.other} 
                 </p>
                 <p className={`${StylesA['text-desc']} ${StylesA['desc']}`}>
                   Other costs

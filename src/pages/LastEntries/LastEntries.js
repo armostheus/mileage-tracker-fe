@@ -38,7 +38,7 @@ const LastEntries = (props) => {
           </h2>
         </div>
         <div className={StylesA['list-container']}>
-          {renderLastEntries()}
+          {!props.data ? 'No Entries' : renderLastEntries()}
         </div>
       </div>
     )

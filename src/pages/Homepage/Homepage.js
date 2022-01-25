@@ -3,12 +3,15 @@ import ExpenseDetails from "../ExpenseDetails/ExpenseDetails"
 import LastEntries from "../LastEntries/LastEntries"
 import Styles from './Homepage.module.css'
 import Navbar from "../Navbar/Navbar";
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { getLastEntries, getExpenseData, getGasData } from "../../utils";
 
 const gasData = {
-    avgFuelConsumption: 6.568,
-    lastFuelConsumption: 7.556,
-    lastFuelPrice: 1.65,
-    lastEntryDate: new Date(2022, 0, 12)
+  avgFuelConsumption: 6.568,
+  lastFuelConsumption: 7.556,
+  lastFuelPrice: 1.65,
+  lastEntryDate: new Date(2022, 0, 12)
 }
 const expenseData = {
   thisMonth: {
@@ -60,6 +63,21 @@ const lastEntries = [
 ]
 
 const Homepage = () => {
+  const expense = useSelector(state => state.expenseReducer)
+  const [lastEntries, setLastEntries] = useState(null)
+  const [expenseData, setExpenseData] = useState(null)
+  const [gasData, setGasData] = useState(null)
+
+  useEffect(() => {
+    setLastEntries(getLastEntries(expense))
+    setExpenseData(getExpenseData(expense))
+    setGasData(getGasData(expense))
+  }, [expense])
+
+  useEffect(() => {
+    console.log(expense)
+  }, [])
+
   return (
     <>
       <GasDetails data={gasData}/>

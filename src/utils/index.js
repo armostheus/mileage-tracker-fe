@@ -35,7 +35,8 @@ export const generateNewState = (state, payload) => {
           gasFilled: payload.gasFilled,
           price: payload.price
         })
-        el.data.sort((a, b) => b.date - a.date)
+        console.log(el.data)
+        el.data.sort((a, b) => new Date(b.date) - new Date(a.date))
         dataFound = true
         return false
       }
@@ -48,5 +49,82 @@ export const generateNewState = (state, payload) => {
   })
   return stateClone
 }
-
+export const getLastEntries = (expense) => {
+  let lastEntries = [], entryCount = 0
+  if (expense.length === 0) {
+    return []
+  } else {
+    expense.every(el => {
+      let tempEl = {}
+      tempEl.month = el.month
+      tempEl.year = el.year
+      tempEl.data = []
+      el.data.every(elem => {
+        entryCount++
+        tempEl.data.push({
+          remarks: elem.remarks,
+          data: new Date(elem.date),
+          odoReading: elem.odoReading,
+          cost: elem.cost,
+          gasFilled: elem.gasFilled,
+          price: elem.price
+        })
+        if (entryCount >= 2) return false
+        else return true
+      })
+      lastEntries.push(tempEl)
+      if (entryCount >= 2) return false
+      else return true
+    })
+  }
+  return lastEntries
+}
+export const getExpenseData = (expense) => {
+  const expenseData = {
+    thisMonth: {
+        gas: 0,
+        other: 0
+    },
+    previousMonth: {
+      gas: 0,
+      other: 0
+    }
+  }
+  let today = new Date()
+  let lastDay = new Date(today.getFullYear(), today.getMonth()-1)
+  let gasThisMonth = 0, gasPrevMonth = 0
+  if (expense[0]) {
+    gasThisMonth = expense[0].data.reduce((prev, curr) => {
+      return prev += curr.cost
+    }, 0)
+  }
+  else if (expense[1]) {
+    gasPrevMonth = expense[0].data.reduce((prev, curr) => {
+      return prev += curr.cost
+    }, 0)
+  }
+  expenseData.thisMonth.gas = gasThisMonth
+  expenseData.previousMonth.gas = gasPrevMonth
+  return expenseData
+}
+export const getGasData = (expense) => {
+  let avgFuel = 0, lastFuel = 0
+  let dataArr = [], totalFuel = 0
+  expense.forEach(el => {
+    dataArr = [...dataArr, ...el.data]
+  })
+  dataArr.forEach(el => {
+    totalFuel += el.gasFilled
+  })
+  avgFuel = (dataArr[0].odoReading-dataArr[dataArr.length-1].odoReading) / totalFuel
+  lastFuel = (_.get(dataArr, '[0].odoReading', 0) - _.get(dataArr, '[1].odoReading', 0)) / _.get(dataArr, '[0].gasFilled', 0)
+  console.log(avgFuel, lastFuel, totalFuel, dataArr)
+  const gasData = {
+    avgFuelConsumption: avgFuel,
+    lastFuelConsumption: lastFuel,
+    lastFuelPrice: _.get(dataArr, '[0].price', 0),
+    lastEntryDate: new Date(_.get(dataArr, '[0].date', 0))
+  }
+  return gasData
+}
 export const getDayName = (num) => DAY[num]
