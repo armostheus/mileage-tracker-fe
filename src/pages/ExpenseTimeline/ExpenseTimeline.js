@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux'
 import { getMonth, getDayName } from '../../utils'
 import Navbar from '../Navbar/Navbar'
 import Styles from  './ExpenseTimeline.module.css'
@@ -59,6 +60,7 @@ const expenseTimeline = [
   }
 ]
 const ExpenseTimeline = () => {
+  const expenseTimeline = useSelector(state => state.expenseReducer)
   const generateExpenseList = (expList) => {
     return(
       <ul style={{listStyleType: 'none', borderBottom: '1px solid #72727240'}}>
@@ -70,7 +72,7 @@ const ExpenseTimeline = () => {
                   <h2 className={Styles['sub-header']}>
                     {exp.remarks}
                   </h2>
-                  <p className={Styles['text-dull']}>{getDayName(exp.date.getDay())}, {exp.date.getDate()}</p>
+                  <p className={Styles['text-dull']}>{getDayName(new Date(exp.date).getDay())}, {new Date(exp.date).getDate()}</p>
                   <p className={Styles['text-dull']}>{exp.odoReading.toLocaleString()} mi</p>
                 </section>
                 <p className={Styles['text-normal']}>${exp.cost}</p>
@@ -82,6 +84,15 @@ const ExpenseTimeline = () => {
     ) 
   }
   const generateTimeline = () => {
+    if (!expenseTimeline.length) {
+      return (
+        <>
+          <div className={Styles['container']}>
+            <h5 className={Styles['header']}>No Data</h5>
+          </div>
+        </>
+      )
+    }
     return expenseTimeline.map((el) => {
       return (
         <>

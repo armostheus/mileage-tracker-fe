@@ -1,14 +1,25 @@
 .input-container {
   display: flex;
   flex-direction: column;
+  width: calc(50% - 5%);
+  padding: 10px;
 }
 .wrapper {
   display: flex;
   flex-wrap: wrap;
+  width: 100%;
+  margin: 10px 16px;
 }
 .label {
   font-size: 12px;
 }
 .input {
-  height: 100px;
+  height: 30px;
+}
+.button-wrapper {
+  margin: 0 auto;
+  width: fit-content;
+  padding: 20px 0px;
+}
+.button {
 }
