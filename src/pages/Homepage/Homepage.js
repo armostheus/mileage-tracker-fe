@@ -64,6 +64,7 @@ const lastEntries = [
 
 const Homepage = () => {
   const expense = useSelector(state => state.expenseReducer)
+  const lastOdoReading = useSelector(state => state.firstOdoReading)
   const [lastEntries, setLastEntries] = useState(null)
   const [expenseData, setExpenseData] = useState(null)
   const [gasData, setGasData] = useState(null)
@@ -71,7 +72,7 @@ const Homepage = () => {
   useEffect(() => {
     setLastEntries(getLastEntries(expense))
     setExpenseData(getExpenseData(expense))
-    setGasData(getGasData(expense))
+    setGasData(getGasData(expense, lastOdoReading))
   }, [expense])
 
   useEffect(() => {

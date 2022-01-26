@@ -9,3 +9,13 @@ export const expenseReducer = (state = [], action) => {
       return state
   }
 }
+
+export const firstOdoReading = (state = 0, action) => {
+  console.log('in reducer', state, action)
+  switch (action.type) {
+    case 'ADD_FIRST_ODO_READING':
+      return action.payload.firstReading
+    default:
+      return state
+  }
+}

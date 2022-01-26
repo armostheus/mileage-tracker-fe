@@ -1,10 +1,16 @@
 import { useEffect, useState } from 'react'
 import Styles from './AddExpenseForm.module.css'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom';
+import { HOMEPAGE } from '../../constants';
+import _ from 'lodash';
 
 const AddExpenseForm = () => {
   const [formData, setFormData] = useState({});
+  const [errList, setErrList] = useState([])
+  const expenseData = useSelector(state => state.expenseReducer)
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const addToFormData = (e) => {
     if (e.target.name === 'date') {
       let prevDate = formData.date
@@ -15,7 +21,8 @@ const AddExpenseForm = () => {
         })
       } else {
         let currDate = new Date(e.target.value)
-        currDate.setTime(prevDate.getTime())
+        currDate.setHours(prevDate.getHours())
+        currDate.setMinutes(prevDate.getMinutes())
         setFormData({
           ...formData,
           date: currDate
@@ -40,20 +47,89 @@ const AddExpenseForm = () => {
       })
     }
   }
-  const submitForm = () => {
-    dispatch({
-      type: 'ADD_EXPENSE',
-      payload: {
-        ...formData,
-        cost: +(formData.price * formData.gasFilled).toFixed(2)
-      }
+  const getOtherEntries = (date) => {
+    let month = date.getMonth(), year = date.getFullYear()
+    let prev = null, next = null, dupe = false
+    expenseData.every((el, i) => {
+      if (el.year === year && el.month === month) {
+        el.data.every((elem, idx)=> {
+          let currDate = new Date(elem.date), prevDate = new Date(_.get(el, `[${idx+1}].date`, 0))
+          if (currDate.getTime() > date.getTime()) {
+            if (el[idx+1] && prevDate > date) {
+              return true
+            } else if (!el[idx+1]) {
+              prev = null
+              next = elem
+              return false
+            } else if (prevDate === date){
+              dupe = true
+              return false
+            } else {
+              prev = el[idx+1]
+              next = elem
+              return false
+            }
+          } else if (currDate.getTime() === date.getTime()) {
+            dupe = true
+            return false
+          } else {
+            let prevData = _.get(expenseData, `[${i-1}].data`, null)
+            prev = elem
+            next = i === 0 ? null : prevData[prevData.length-1]
+            return false
+          }
+        })
+      } 
+      return !prev || !dupe
     })
+    return [prev, next, dupe]
+  }
+  const validateForm = () => {
+    if (!expenseData.length) return true
+    let dateInForm = formData.date
+    let [previousEntry, nextEntry, duplicate] = getOtherEntries(dateInForm)
+    if (duplicate) {
+      setErrList([...errList, 'Entry already exists for that interval'])
+      return false
+    }
+    if (previousEntry && !duplicate && previousEntry.odoReading <= formData.odoReading) {
+      if (!nextEntry || (nextEntry && formData.odoReading <= nextEntry.odoReading)) {
+        return true
+      } else {
+        setErrList([...errList, `Odometer reading mismatch with previous entries`])
+        return false
+      }
+    } else {
+      setErrList([...errList, `Odometer reading mismatch with previous entries`])
+      return false
+    }
+  }
+  const submitForm = () => {
+    setErrList([])
+  //  if (validateForm()) {
+      if (expenseData.length === 0) {
+        dispatch({
+          type: 'ADD_FIRST_ODO_READING',
+          payload: {
+            firstReading: formData.odoReading
+          }
+        })
+      }
+      dispatch({
+        type: 'ADD_EXPENSE',
+        payload: {
+          ...formData,
+          cost: +(formData.price * formData.gasFilled).toFixed(2)
+        }
+      })
+      navigate(HOMEPAGE)
+//    }     
   }
     return (
       <>
         <div className={Styles['wrapper']}>
           <div className={Styles['input-container']}>
-            <label for="odometer-reading" className={Styles['label']}>Odometer reading</label>
+            <label htmlFor="odometer-reading" className={Styles['label']}>Odometer reading</label>
             <input 
               type="number" 
               id="odometer-reading" 
@@ -62,9 +138,10 @@ const AddExpenseForm = () => {
               value={formData.odoReading}
               onChange={(e) => addToFormData(e)}
             />
+            <p className={Styles['input-helper-text']}>Previous Odometer reading : {_.get(expenseData, '[0].data[0].odoReading', 0)}</p>
           </div>
           <div className={Styles['input-container']}>
-            <label for="gas-filled" className={Styles['label']}>Gas (liter)</label>
+            <label htmlFor="gas-filled" className={Styles['label']}>Gas (liter)</label>
             <input 
               type="number" 
               id="gas-filled" 
@@ -75,7 +152,7 @@ const AddExpenseForm = () => {
             />
           </div>
           <div className={Styles['input-container']}>
-            <label for="price" className={Styles['label']}>Price per liter</label>
+            <label htmlFor="price" className={Styles['label']}>Price per liter</label>
             <input 
               type="number" 
               id="price" 
@@ -86,7 +163,7 @@ const AddExpenseForm = () => {
             />
           </div>
           <div className={Styles['input-container']}>
-            <label for="total-cost" className={Styles['label']}>Total cost</label>
+            <label htmlFor="total-cost" className={Styles['label']}>Total cost</label>
             <input 
               type="number" 
               id="total-cost" 
@@ -98,7 +175,7 @@ const AddExpenseForm = () => {
             />
           </div>
           <div className={Styles['input-container']}>
-            <label for="refueling-date" className={Styles['label']}>Date</label>
+            <label htmlFor="refueling-date" className={Styles['label']}>Date</label>
             <input 
               type="date" 
               id="refueling-date" 
@@ -108,7 +185,7 @@ const AddExpenseForm = () => {
             />
           </div>
           <div className={Styles['input-container']}>
-            <label for="refueling-time" className={Styles['label']}>Time</label>
+            <label htmlFor="refueling-time" className={Styles['label']}>Time</label>
             <input 
               type="time" 
               id="refueling-time" 
@@ -118,6 +195,9 @@ const AddExpenseForm = () => {
             />
           </div>
         </div>
+        {errList.length ? (
+          errList.map(err => <p className={Styles['error-msg']}>{err}</p>)
+        ) : ''}
         <div className={Styles['button-wrapper']}>
           <button className={Styles['button']} onClick={() => submitForm()}>Save</button>
         </div>

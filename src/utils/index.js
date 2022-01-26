@@ -94,37 +94,47 @@ export const getExpenseData = (expense) => {
   let lastDay = new Date(today.getFullYear(), today.getMonth()-1)
   let gasThisMonth = 0, gasPrevMonth = 0
   if (expense[0]) {
-    gasThisMonth = expense[0].data.reduce((prev, curr) => {
-      return prev += curr.cost
-    }, 0)
+    if (expense[0].year === today.getFullYear() && expense[0].month === today.getMonth()) {
+      gasThisMonth = expense[0].data.reduce((prev, curr) => {
+        return prev += curr.cost
+      }, 0)
+    }
   }
-  else if (expense[1]) {
-    gasPrevMonth = expense[0].data.reduce((prev, curr) => {
-      return prev += curr.cost
-    }, 0)
+  if (expense[1]) {
+    if (gasThisMonth && expense[1].year === lastDay.getFullYear() && expense[1].month === lastDay.getMonth()) {
+      gasPrevMonth = expense[1].data.reduce((prev, curr) => {
+        return prev += curr.cost
+      }, 0)
+    } else if (expense[0].year === lastDay.getFullYear() && expense[0].month === lastDay.getMonth()) {
+      gasPrevMonth = expense[0].data.reduce((prev, curr) => {
+        return prev += curr.cost
+      }, 0)
+    }
   }
   expenseData.thisMonth.gas = gasThisMonth
   expenseData.previousMonth.gas = gasPrevMonth
   return expenseData
 }
-export const getGasData = (expense) => {
+export const getGasData = (expense, lastOdoReading) => {
+  console.log(expense, lastOdoReading)
   let avgFuel = 0, lastFuel = 0
   let dataArr = [], totalFuel = 0
   expense.forEach(el => {
     dataArr = [...dataArr, ...el.data]
   })
-  dataArr.forEach(el => {
-    totalFuel += el.gasFilled
+  dataArr.forEach((el, idx) => {
+    if (idx !== 0) totalFuel += el.gasFilled
   })
-  avgFuel = (dataArr[0].odoReading-dataArr[dataArr.length-1].odoReading) / totalFuel
-  lastFuel = (_.get(dataArr, '[0].odoReading', 0) - _.get(dataArr, '[1].odoReading', 0)) / _.get(dataArr, '[0].gasFilled', 0)
+  avgFuel = (_.get(dataArr, '[0].odoReading', 0)-_.get(dataArr, `[${dataArr.length-1}].odoReading`, 0)) / totalFuel
+  lastFuel = (_.get(dataArr, '[0].odoReading', 0) - _.get(dataArr, '[1].odoReading', 0)-lastOdoReading) / _.get(dataArr, '[1].gasFilled', 1)
   console.log(avgFuel, lastFuel, totalFuel, dataArr)
   const gasData = {
-    avgFuelConsumption: avgFuel,
+    avgFuelConsumption: isNaN(avgFuel) ? 0 : avgFuel,
     lastFuelConsumption: lastFuel,
     lastFuelPrice: _.get(dataArr, '[0].price', 0),
-    lastEntryDate: new Date(_.get(dataArr, '[0].date', 0))
+    lastEntryDate: _.get(dataArr, '[0].date') ? new Date(_.get(dataArr, '[0].date')) : null
   }
+  console.log(gasData)
   return gasData
 }
 export const getDayName = (num) => DAY[num]

@@ -1,8 +1,9 @@
 import { combineReducers } from 'redux';
-import { expenseReducer } from './expenseReducer';
+import { expenseReducer, firstOdoReading } from './expenseReducer';
 
 const rootReducer = combineReducers({
-  expenseReducer
+  expenseReducer,
+  firstOdoReading
 });
 
 export default rootReducer;

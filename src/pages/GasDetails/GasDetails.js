@@ -1,6 +1,15 @@
 import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
 import Styles from './GasDetails.module.css'
 const GasDetails = (props) => {
+  const getLastRefuelingDate = () => {
+    let dateLocaleString = '', days = 0, today = new Date()
+    if (props.data && props.data.lastEntryDate) {
+      dateLocaleString = props.data.lastEntryDate.toLocaleString()
+      days = Math.floor((today.getTime() - props.data.lastEntryDate.getTime()) / (1000 * 3600 * 24))
+      return `${dateLocaleString} . ${days} days ago`
+    }
+    return ''
+  }
   return (
     <div className={Styles['container']}>
       <div className={Styles['header']}>
@@ -62,7 +71,7 @@ const GasDetails = (props) => {
         </div>
         <div className={Styles['list-bottom']}>
           <p className={Styles['sub-text']}>
-            {!props.data ? '' : `${props.data.lastEntryDate.toLocaleString()} . 7 days ago`}
+            {getLastRefuelingDate()}
           </p>
         </div>
       </div>
