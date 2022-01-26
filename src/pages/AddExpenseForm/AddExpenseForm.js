@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
 import { HOMEPAGE } from '../../constants';
 import _ from 'lodash';
+import { validateNumber } from '../../utils';
 
 const AddExpenseForm = () => {
   const [formData, setFormData] = useState({});
@@ -41,6 +42,7 @@ const AddExpenseForm = () => {
         date: prevDate
       })
     } else {
+      console.log(validateNumber(+e.target.value))
       setFormData({
         ...formData,
         [e.target.name]: e.target.value ? +e.target.value : 0

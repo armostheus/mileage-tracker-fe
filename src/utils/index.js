@@ -138,3 +138,8 @@ export const getGasData = (expense, lastOdoReading) => {
   return gasData
 }
 export const getDayName = (num) => DAY[num]
+export const validateNumber = (number) => {
+  if (number < 0) return false
+  if ((''+number).includes('e')) return false
+  return true
+}
