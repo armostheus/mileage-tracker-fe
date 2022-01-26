@@ -75,10 +75,6 @@ const Homepage = () => {
     setGasData(getGasData(expense, lastOdoReading))
   }, [expense])
 
-  useEffect(() => {
-    console.log(expense)
-  }, [])
-
   return (
     <>
       <GasDetails data={gasData}/>

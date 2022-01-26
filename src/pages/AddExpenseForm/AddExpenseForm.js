@@ -42,7 +42,6 @@ const AddExpenseForm = () => {
         date: prevDate
       })
     } else {
-      console.log(validateNumber(+e.target.value))
       setFormData({
         ...formData,
         [e.target.name]: e.target.value ? +e.target.value : 0

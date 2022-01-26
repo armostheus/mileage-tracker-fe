@@ -35,7 +35,6 @@ export const generateNewState = (state, payload) => {
           gasFilled: payload.gasFilled,
           price: payload.price
         })
-        console.log(el.data)
         el.data.sort((a, b) => new Date(b.date) - new Date(a.date))
         dataFound = true
         return false
@@ -116,7 +115,6 @@ export const getExpenseData = (expense) => {
   return expenseData
 }
 export const getGasData = (expense, lastOdoReading) => {
-  console.log(expense, lastOdoReading)
   let avgFuel = 0, lastFuel = 0
   let dataArr = [], totalFuel = 0
   expense.forEach(el => {
@@ -127,14 +125,12 @@ export const getGasData = (expense, lastOdoReading) => {
   })
   avgFuel = (_.get(dataArr, '[0].odoReading', 0)-_.get(dataArr, `[${dataArr.length-1}].odoReading`, 0)) / totalFuel
   lastFuel = (_.get(dataArr, '[0].odoReading', 0) - _.get(dataArr, '[1].odoReading', 0)-lastOdoReading) / _.get(dataArr, '[1].gasFilled', 1)
-  console.log(avgFuel, lastFuel, totalFuel, dataArr)
   const gasData = {
     avgFuelConsumption: isNaN(avgFuel) ? 0 : avgFuel,
     lastFuelConsumption: lastFuel,
     lastFuelPrice: _.get(dataArr, '[0].price', 0),
     lastEntryDate: _.get(dataArr, '[0].date') ? new Date(_.get(dataArr, '[0].date')) : null
   }
-  console.log(gasData)
   return gasData
 }
 export const getDayName = (num) => DAY[num]

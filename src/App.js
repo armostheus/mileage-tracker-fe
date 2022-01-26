@@ -6,7 +6,7 @@ function App() {
   let element = useRoutes(MAIN_ROUTES);
   return (
     <>
-      <div className={Styles['header']}>Header</div>
+      <div className={Styles['header']}>Mileage Tracker</div>
       <div className={Styles['app']}>
         <div className={Styles['content']}>
           {element}
