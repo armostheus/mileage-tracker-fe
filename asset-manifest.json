@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/mileage-tracker-fe/static/css/main.75115049.css",
+    "main.js": "/mileage-tracker-fe/static/js/main.490b6f29.js",
+    "static/js/787.d99704b6.chunk.js": "/mileage-tracker-fe/static/js/787.d99704b6.chunk.js",
+    "static/media/fuel.svg": "/mileage-tracker-fe/static/media/fuel.a14acc192d0cd08f81fd.svg",
+    "index.html": "/mileage-tracker-fe/index.html",
+    "main.75115049.css.map": "/mileage-tracker-fe/static/css/main.75115049.css.map",
+    "main.490b6f29.js.map": "/mileage-tracker-fe/static/js/main.490b6f29.js.map",
+    "787.d99704b6.chunk.js.map": "/mileage-tracker-fe/static/js/787.d99704b6.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.75115049.css",
+    "static/js/main.490b6f29.js"
+  ]
+}
